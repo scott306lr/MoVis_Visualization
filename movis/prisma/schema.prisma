@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Movie {
+  id                   Int        @id @default(autoincrement())
+  title                String
+  // overview             String
+  runtime              Int
+  poster_url           String
+  release_date         DateTime   @db.Date
+  budget               Int
+  revenue              Int
+  original_language_id Int
+  spoken_languages     Language[]
+  keywords             Keyword[]
+  crew                 Person[]
+  genres               Genre[]
+  countries            Country[]
+  companies            Company[]
+
+  popularity   Float
+  vote_average Float
+  vote_count   Int
+  ratings      Rating[]
+}
+
+model Person {
+  id         Int     @id @default(autoincrement())
+  name       String
+  gender     Int //0: not specified, 1: female, 2: male
+  popularity Float
+  movies     Movie[]
+}
+
+model Country {
+  id         Int     @id @default(autoincrement())
+  iso_3166_1 String
+  name       String
+  movies     Movie[]
+}
+
+model Keyword {
+  id     Int     @id @default(autoincrement())
+  name   String
+  movies Movie[]
+}
+
+model Company {
+  id     Int     @id @default(autoincrement())
+  name   String
+  movies Movie[]
+}
+
+model Genre {
+  id     Int     @id @default(autoincrement())
+  name   String
+  movies Movie[]
+}
+
+model Language {
+  id        Int     @id @default(autoincrement())
+  iso_639_1 String
+  name      String
+  movies    Movie[]
+}
+
+model User {
+  id      Int      @id @default(autoincrement())
+  ratings Rating[]
+}
+
+model Rating {
+  id        Int      @id @default(autoincrement())
+  movieId   Int
+  userId    Int
+  rating    Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  movie Movie @relation(fields: [movieId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@index([movieId])
+  @@index([userId])
+}
