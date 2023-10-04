@@ -8,7 +8,6 @@
 - 0816153 陳琮方
 
 
-
 ### How to start MoVis on your local machine
 
 1. Clone the repository, go to the *movis* folder
